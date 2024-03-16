@@ -28,7 +28,7 @@ function Education() {
         <div className="flex  items-center">
           <span className="h-[2px] w-24 bg-[#1a1443]" />
           <span className="w-fit rounded-md bg-[#1a1443] p-2 px-5 text-xl text-white">
-            Educations
+            Education
           </span>
           <span className="h-[2px] w-24 bg-[#1a1443]" />
         </div>
