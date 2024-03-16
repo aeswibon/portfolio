@@ -4,19 +4,29 @@ on:
   push:
     branches:
       - master
+  pull_request:
 
 jobs:
-  deploy:
+  preview:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: install Vercel CLI
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+      - name: Install Vercel CLI
         run: npm install --global vercel@latest
-      - name: pull Vercel environment information
+      - name: Pull Vercel environment information
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-      - name: build project artifacts
+      - name: Build the project artifacts
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
-      - name: deploy preview
+      - name: Deploy Preview
         run: |
           OUTPUT=$(du --inodes -d 5 .vercel/output)
           echo "$OUTPUT"
@@ -24,6 +34,5 @@ jobs:
           PERCENTAGE=$(echo "$LAST" | awk 'BEGIN {maxtotal=15000} { printf "%.2f%%", ($1/maxtotal*100) }')
           echo "Vercel file usage percentage" >> $GITHUB_STEP_SUMMARY
           echo "$PERCENTAGE" >> $GITHUB_STEP_SUMMARY
-          du -h -d 3 .vercel/output/functions/en
           vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} > domain.txt
-          vercel alias --scope ${{ secrets.PROJECT_ID }} --token ${{ secrets.VERCEL_TOKEN }} set `cat domain.txt` aeswibon-preview.vercel.app
+          vercel alias --token ${{ secrets.VERCEL_TOKEN }} set `cat domain.txt` aeswibon-preview.vercel.app

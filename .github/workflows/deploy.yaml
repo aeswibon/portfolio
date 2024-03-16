@@ -8,15 +8,23 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout the repository
         uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
-      - name: pull Vercel environment information
+      - name: Pull Vercel environment information
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-      - name: build project artifacts
+      - name: Build the project artifacts
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-      - name: deploy project artifacts to Vercel
+      - name: Deploy to Vercel
         run: |
           OUTPUT=$(du --inodes -d 5 .vercel/output)
           echo "$OUTPUT"
