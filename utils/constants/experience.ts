@@ -3,7 +3,7 @@ export const experiences = [
     id: 1,
     title: "Software Developer Intern",
     company: "Hatio Innovations Pvt. Ltd.",
-    duration: "(Nov 2023 - March 2023)",
+    duration: "(Nov 2023 - Current)",
     image: "/images/experience/hatio.png",
   },
   {
